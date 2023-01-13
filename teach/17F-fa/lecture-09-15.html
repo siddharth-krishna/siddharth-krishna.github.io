@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <title>Fundamental Algorithms, Recitation: Sep 15, 2017</title>
+
+<xmp theme="journal" style="display:none;">
+<h4 style="text-align:right;">[Back to Recitation Home](index.html)</h4>
+
+## Asymptotic Notation
+
+### Analogy with $<, \leq$ etc
+
+I want to stress that although one can think of $f(n) = O(g(n))$ as saying something like $f(n) \leq g(n)$, this is only an analogy, and as with all analogies, has its limits.
+For instance, what I said in class about $f(n) = o(g(n))$ being like the "opposite" of $f(n) = \Omega(g(n))$ is an analogy, and **not always true**.
+
+$f(n) = \Omega(g(n))$ means that there exists a constant factor $c$, after some $n_0$, $c g(n)$ is a lower bound for $f(n)$.
+The negation of this condition is that for *any* constant factor $c$ and any starting point $n_0$, there is some $n \geq n_0$ such that $c g(n)$ is *not* a lower bound for $f(n)$ (i.e. $f(n) < c g(n)$).
+On the other hand, $f(n) = o(g(n))$ means that for *any* constant factor $c$, after some starting point $n_0$, $f(n) < c g(n)$.
+Thus, for $f(n)$ to not be $\Omega(g(n))$, you only need $f(n) < c g(n)$ to be true for *some* $n \geq n_0$, while for $f(n)$ to be $o(g(n))$ you need $f(n) < c g(n)$ to be true for *all* $n \geq n_0$.
+
+This means that if $f(n) = o(g(n))$, then $f(n) \neq \Omega(g(n))$.
+However, if $f(n) \neq \Omega(g(n))$ then it is *not necessary* that $f(n) = o(g(n))$.
+You can try to come up with an example where this is not true, similar to the counter-example below.
+
+### Is it true that $O(g(n)) = \Theta(g(n)) \cup o(g(n))$?
+
+Unfortunately, **no**.
+The reason our proof attempt in class failed is similar to the reason why $f(n) \neq \Omega(g(n)) \not\Rightarrow f(n) = o(g(n))$.
+
+$\Theta(g(n)) \cup o(g(n)) \subseteq O(g(n))$ is true, because $\Theta(\cdot)$ is a stronger condition than $O(\cdot)$, and so $\Theta(g(n)) \subseteq O(g(n))$.
+
+On the other hand, there exist functions in $O(g(n))$ but not in $\Theta(g(n)) \cup o(g(n))$.
+For example, let $g(n) = n$ and $f(n)$ be defined as
+$$f(n) =
+\begin{cases}
+n & \text{if $n$ is odd} \\
+1 & \text{if $n$ is even.}
+\end{cases}$$
+
+It is easy to see that $f(n) = O(g(n))$, because you can use $c = 1, n_0 = 1$ and see that for all $n \geq 1$, $0 \leq f(n) \leq g(n)$.
+On the other hand, $f(n) \neq \Theta(g(n))$ because whatever $c_1, c_2, n_0$ you try to use, there will be some $n$ (in fact, try $n = 2 \max(n_0, 1/c_1)$) where $f(n) = 1 < c_1 n = c_1 g(n)$.
+Thus, you cannot lower bound $f$ using any constant multiple of $g$.
+For a similar reason, $f(n) \neq o(g(n))$.
+When $c = 1$, whatever $n_0 > 0$ you try to use, there will be some $n \geq n_0$ (for instance $n = 2n_0 + 1$) where $f(n) = n \not< n = g(n)$.
+
+## What about $\Theta(g(n)) \cap o(g(n)) = \emptyset$?
+
+This is true, as we proved in class. Here's the proof again.
+
+Suppose there was an $f(n)$ that was both $\Theta(g(n))$ and $o(g(n))$.
+By the definition of $\Theta(g(n))$, there must exist some $c_1, c_2, n_0$ such that for all $n \geq n_0$, $c_1 g(n) \leq f(n) \leq c_2 g(n)$.
+By the definition of $o(g(n))$, for all $c$ there exist some $n_c$ such that for all $n \geq n_c$, $f(n) < c g(n)$.
+But what if we tried $c = c_1$?
+Then we should get some $n_{c_1}$ such that when $n \geq n_{c_1}$, $f(n) < c_1 g(n)$.
+But if we choose a big enough $n$ such that it is also greater than $n_0$ (for instance $n = max(n_0, n_{c_1})$), then we must also have $c_1 g(n) \leq f(n)$, which is a contradiction.
+
+Thus, there can be no such function $f(n)$.
+
+---
+
+## Merge Sort
+
+I didn't get to go over this in the recitation, but here is a nice website containing visualizations of various sorting algorithms, including merge sort: [VisuAlgo](https://visualgo.net/en/sorting).
+
+[Here](http://www.ee.ryerson.ca/~courses/coe428/sorting/mergesort.html) is another useful merge sort animation.
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+</html>

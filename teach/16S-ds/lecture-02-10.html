@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Feb 10, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna</h4>
+
+(Some exercises courtesy [Marcelo Cicconet](http://marceloc.net/))
+
+## Exercise 1
+
+```java
+public abstract class Animal {
+        void defaultBehavior() {
+                System.out.println("eat");
+        }
+        
+        abstract void defaultDiet();
+}
+```
+
+```java
+public interface Locomotion {
+        public void runsOn();
+}
+```
+
+```java
+public class Deer extends Animal implements Locomotion {
+        public void runsOn() {
+                System.out.println("legs");
+        }
+        
+        void defaultBehavior() {
+                System.out.println("eat; avoid being eaten");
+        }
+        
+        void defaultDiet() {
+                System.out.println("leaves");
+        }
+}
+```
+
+```java
+public class Car implements Locomotion{
+        public void runsOn() {
+                System.out.println("wheels");
+        }
+}
+```
+
+### Questions
+
+1. Comment the methods in `Deer.java`, one at a time. What happens?
+2. Make the `defaultDiet()` method in `Animal.java` not abstract. What happens?
+3. Make the class `Animal` in `Animal.java` not abstract. What happens?
+4. Can a class inherit from more than one class in Java?
+5. Why is `Locomotion`, in this example, implemented as interface, not as abstract class (like `Animal`)?
+
+---
+
+## Exercise 2
+
+```java
+        static int recsum(int n) {
+                if (n == 0) {
+                        return 0;
+                } else {
+                        int recSum = recsum(n-1);
+                        return n+recSum;
+                }
+        }
+```
+
+How many times in total is `recsum` called for `n = 4`? For general `n`?
+
+### Answer
+
+Recsum is called 5 times (counting the initial call to `recsum(4)`) for `n = 4`. In general, `recsum(n)` results in `n + 1` calls.
+
+### Fibonacci numbers
+
+Aho Lymonk sat in his monastery atop a hill. To reach the village at the bottom, he had to go down `n` steps. Since Aho did this climb every day, and was bored out of his mind, he decided to make things interesting. The steps were such that Aho could either take a small step and go down one step, or if he stretched his legs and took a big step, he could go down two. Thus, if there were 3 steps to his monastery, he could go down them in 3 ways:
+```
+small step, small step, small step
+small step, big step
+big step, small step
+```
+
+How many ways can he climb down `n` steps?
+
+### Answer
+
+Let `f(n)` be the number of ways to climb down `n` steps. We saw that `f(3) = 3`. It is also easy to see that `f(0) = f(1) = 1` (if you accept the rather pointless statement that there's only 1 way to go down 0 steps). Now, imagine Aho sitting on the top of the flight of `n` stairs, about to go down. His first step can either be a small step, or a big step.
+
+ - If his first step is a small one, then he has `n - 1` steps to go down still. The number of ways of going down `n - 1` steps is `f(n - 1)`.
+ - If he takes a big step first, then he will have `n - 2` steps to go down. There are `f(n - 2)` ways of going down these remaining steps.
+
+Since he does either of the two options above, his total possible ways of going down must be the sum of the ways in each option. Thus,
+```
+f(n) = f(n - 1) + f(n - 2)
+```
+
+These numbers (1, 1, 2, 3, 5, 8, 13, ...) are called [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number).
+
+### Question
+
+Write code to calculate `f(n)`.
+
+### Answer
+
+```java
+static int f(int n) {
+    if (n == 0) return 1;
+    else if (n == 1) return 1;
+    else {
+        return f(n-1) + f(n-2);
+    }
+}
+```
+
+### Question
+
+How many times is `f` called for `n = 4`? For general `n`?
+
+### Answer
+
+Including the original call, there are 9 calls to `f` when `f(4)` is called.
+
+In general, since `f(n)` needs the result of both `f(n - 1)` and `f(n - 2)`, the number of calls made by `f(n)` is the sum of the number of calls made by `f(n - 1)` and `f(n - 2)`. If we call the number of calls to `f` (including the original) when `f(n)` is called as `h(n)`, then this means that
+```
+h(n) = h(n - 1) + h(n - 2) + 1
+```
+
+(the `+ 1` is to count the original call to `f(n)`). Looks familiar? This is very similar to the Fibonacci numbers. In fact, `h(n) >= f(n)` for every `n`.
+
+One can show that `f(n)` is approximately equal to `phi^n`, where `phi` is the golden ratio (1.618...). This means that `f(n)` grows exponentially in `n`. In other words, calculating the Fibonacci numbers with the above piece of code is a bad idea.
+
+A smarter way to compute `f(n)` would be to store the values of `f(1), f(2), ...` in an array, and compute `f(n)` using a loop. This would eliminate the need to call `f(2)` twice while computing `f(4)`, for example. But you don't even need an array, you can compute `f(n)` using just two variables! Try it out.
+
+---
+
+## Bonus: [Tower of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi)
+
+How many moves are required to solve a Tower of Hanoi puzzle with `n` disks?
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+
+
+</html>

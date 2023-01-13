@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Feb 3, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna</h4>
+
+## Question: abstract classes vs interfaces - when to use which?
+
+Not all methods in abstract classes need to be abstract. This is useful when you want to create a parent class that provides definitions for some methods (the simple ones that all child classes do the same way), but leaves some methods abstract (things that each child class does differently). In an interface, you cannot give definitions for any of the methods.
+
+Another important factor is that in Java, you can only inherit from one parent class. Thus you cannot have two abstract classes and have a child class extend them both. On the other hand, a class can implement multiple interfaces, so they are a good choice for scenarios where you want a class to inherit from multiple other classes.
+
+**Note**: abstract classes **can** have constructors. They **cannot** be instantiated. One use for them is that they can be called from constructors of subclasses.
+
+### Example
+
+```java
+ public class Abstract {
+    public static void main(String a[]) {
+        // This is an error. You cannot create an instance of an abstract class
+        // Human bob = new Human(4);
+        
+        // This is okay
+        Human bob = new Student(11);
+    }
+}
+
+abstract class Human {
+    public int barcode;
+
+    public Human(int b) {
+        barcode = b;
+    }
+
+    // Since all Humans yawn the same way,
+    // I can define this method in the abstract class itself.
+    public void yawn() {
+        System.out.println("YAWN.");
+    }
+
+    // Since different types of Humans do this differently, this is abstract
+    abstract public void haveFun();
+}
+
+// A separate interface for NYU people. Not all Humans are in NYU.
+interface Violets {
+    public int getNNumber();
+}
+
+class Student extends Human implements Violets {
+    public Student(int b) {
+        // Even though you can't create a Human object,
+        // the constructor can still be useful
+        super(b);
+    }
+
+    public void sleepInClass() {
+        System.out.println("ZZZZ");
+    }
+
+    // Need to define this function to implement Violets correctly
+    public int getNNumber() {
+        return 7878;
+    }
+
+    // Need to implement this function to extend Human correctly
+    public void haveFun() {
+        System.out.println("Party!");
+    }
+}
+
+class Professor extends Human implements Violets {
+    public Professor(int b) {
+        super(b);
+    }
+    
+    public int getNNumber() {
+        return 98989;
+    }
+
+    public void haveFun() {
+        System.out.println("Take a nap.");
+    }
+}
+```
+
+---
+
+## Exercise 1
+What does the following program print?
+
+```java
+public class Dispatch {
+    public static void main(String a[]) {
+        Dog d = new Dog();
+        Fish f = new Fish();
+        d.eat(f);
+
+        d = new Poodle();
+        d.eat(f);
+
+        f = new Tuna();
+        d.eat(f);
+
+        d = new Dog();
+        d.eat(f);
+    }
+}
+
+class Dog {
+    public void eat(Fish f) {
+        System.out.println("Dog ate a fish.");
+    }
+    public void eat(Tuna t) {
+        System.out.println("Dog ate a tuna.");
+    }
+}
+
+class Poodle extends Dog {
+    public void eat(Fish f) {
+        System.out.println("Poodle ate a fish.");
+    }
+    public void eat(Tuna t) {
+        System.out.println("Poodle ate a tuna.");
+    }
+}
+
+class Fish {}
+class Tuna extends Fish {}
+```
+
+### Answer
+```
+Dog ate a fish.
+Poodle ate a fish.
+Poodle ate a fish.
+Dog ate a fish.
+```
+
+### Explanation
+Java follows the paradigm of "dynamic dispatch" to figure out which function to call when functions are overridden. This means that when you call a function by `o.f()`, Java figures out, at run-time (meaning at that exact moment), what the type is of the object `o` points to. Depending on this type, it goes to that class and picks the function `f`. This means that in the second call of `d.eat(f)`, since `d` points to a Poodle object, it calls the function that prints "Poodle ate a fish.".
+
+What is confusing is that when functions are overloaded (different functions in the same class, differing only on argument type), then Java chooses which function to call purely based on the type of the reference passed to it. This means that in the 3rd and 4th calls to `eat(f)`, even though `f` points to an object of type Tuna, since `f` was declared as `Fish f = ...`, `f` is a reference of type Fish. Thus, it only calls the functions that expect a Fish as an argument, not a Tuna.
+
+If we know for sure that `f` contains a Tuna, and for some reason need to call the `eat(Tuna t)` function, then we must type-cast `f` into something of type Tuna, for example:
+```java
+        Tuna t = (Tuna) f;
+        d.eat(t);
+```
+
+---
+
+## Exercise 2
+Which of the following calls to swimX() are legal?
+
+```java
+package water;
+
+public class Fish {
+    public void swim1() {
+        System.out.println("Fish swam in public.");
+    }
+    protected void swim2() {
+        System.out.println("Fish swam with protection.");
+    }
+    private void swim3() {
+        System.out.println("Fish swam in private.");
+    }
+}
+```
+
+```java
+package water;
+
+public class Tuna extends Fish {
+    public void testSwim() {
+        swim1();
+        swim2();
+        swim3();
+    }
+}
+```
+
+```java
+import water.*;
+
+public class Permissions {
+    public static void main(String a[]) {
+        Fish f = new Fish();
+        f.swim1();
+        f.swim2();
+        f.swim3();
+
+        Tuna t = new Tuna();
+        t.testSwim();
+    }
+}
+```
+
+### Answer
+Any class can call `swim1()` because it is public.
+
+`swim2()` can be called by Tuna, because it is in the same package as Fish. "protected" methods and fields can be accessed by the class itself, all subclasses and other classes in the same package.
+
+`swim3()` cannot be called by Tuna or by Permissions, because it is private. Only methods inside Fish can call `swim3()`.
+
+For more details:
+http://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html
+
+---
+
+## Bonus
+Project Euler problem 3: [Largest prime factor](https://projecteuler.net/problem=3)
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+</html>

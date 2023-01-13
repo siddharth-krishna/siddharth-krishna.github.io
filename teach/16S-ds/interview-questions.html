@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Assignment: Apr 13, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna and Marcelo Cicconet</h4>
+
+## Binary Search Tree
+
+### Question 1
+
+In the binary search tree class, modify the method `insert` in a
+way that the method `find` is used. That is, the method `find` is used
+as a helper to the method `insert`.
+
+### Question 2
+
+(a) In the binary search tree class, implement a method called `cut`,
+with the following signature:
+
+```java
+public void cut(Node n)
+```
+
+This method deletes nodes that have at most 1 child (i.e., nodes that
+have zero or one child).
+
+(b) Modify the method `delete` so that it calls `cut` when appropriate
+(notice that `cut` should be used by `delete` even when the node to be deleted has
+two children).
+
+
+### Question 3
+
+Implement a class called `ArrayLL`, that implements an array of 10
+linked lists. Assume all the keys to be inserted are non-negative
+integers. `ArrayLL` has the methods `insert`, `find` and `delete`, as in
+a standard linked list. The keys should be stored in one of the 10
+linked lists according to the `% 10` operation. For example: key `k =
+11` should be stored at the linked list `11 % 10 = 1`, key 135 should be
+stored at `135 % 10 = 5`, and so on.
+
+### Question 4
+
+Implement a class called `Dictionary`, using `ArrayLL`, where a node
+stores (besides the integer key) two strings, one called `query`, and
+another called `value`. Dictionary has two methods:
+
+```java
+static void put(String query, String value);
+static String get(String key);
+```
+
+Both `put` and `get` have to compute a key (to know in which of the 10
+linked lists the pair query/value should be stored). You can define
+the key the way you find appropriate. One way would be simply to
+compute `length(query) % 10`.
+
+The methods put and get implement a dictionary. For example: consider
+the following pairs query/output from a english-portuguese dictionary:
+
+```
+table - mesa
+car - carro
+chair - cadeira
+road - estrada
+academically - academicamente
+```
+
+`put("table", "mesa")` will store the pair table/mesa at the linked list 5.
+`get("table")` will compute key 5, look for the query `"table"` in linked
+list 5, and output `"mesa"` once (and if) the query `"table"` is found
+there.
+
+### Question 5
+
+Given a binary tree, check if it is a binary search tree or not.
+
+---
+
+## Linked List
+
+For the following questions, assume you have a class as follows:
+
+```java
+public class Node {
+    public Object data;
+    public Node next;
+}
+```
+
+Answer the following questions by implementing methods that use this class. Don't answer them using Java's library implementation of linked lists.
+
+### Question 6
+
+Given a list that may not terminate at null, but may be a "pan-handle" list, determine if it is a pan-handle list or not using no extra memory but just a constant number of reference variables. Your method should have the following signature:
+```java
+public boolean isPanHandle(Node n)
+```
+
+A pan-handle list is one that points back at itself. For example, here is a method that creates a pan-handle list:
+
+```java
+public static Node create() {
+    Node l = new Node();
+    l.next = new Node();
+    l.next.next = new Node();
+    l.next.next.next = new Node();
+    l.next.next.next.next = l.next.next;
+    return l;
+}
+```
+
+### Question 7
+
+Write code to reverse a linked list using O(n) time and O(1) memory. Do not do this by only reversing the data contained by the nodes, or by removing the values and adding them again in reverse order. Do it *in-place* - i.e. without creating any new nodes or destroying any nodes, just by re-arranging the `next` pointers. Your method should have the following signature:
+```java
+public Node reverse(Node n)
+```
+
+The method should return the head of the reversed list.
+
+What happens when this code is run on a panhandle list?
+
+### Question 8
+
+Given two lists that meet at some point, find the node where they merge in less than linear memory and O(n) time. Assume both lists terminate at null.
+
+Here's an example of two such lists:
+
+```java
+public static Node create() {
+    Node l1 = new Node();
+    l1.next = new Node();
+    l1.next.next = new Node();
+    l1.next.next.next = new Node();
+    l1.next.next.next.next = null;
+
+    Node l2 = new Node();
+    l2.next = new Node();
+    l2.next.next = l1.next;
+
+    //l1 and l2 are given as inputs to your program
+}
+```
+
+Your method should have the signature:
+```java
+public Node findJoin(Node a, Node b)
+```
+
+And if called on the two lists `l1` and `l2` created above, `findJoin` should return the node at `l1.next`.
+
+### Question 9
+
+An easier one: swap every pair of consecutive nodes in a list. E.g. a list containing `[1, 2, 3, 4, 5]` would become `[2, 1, 4, 3, 5]`.
+
+Your method should have the following signature:
+```java
+public Node swapConsec(Node n)
+```
+and should return the head of the new list.
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+
+
+</html>

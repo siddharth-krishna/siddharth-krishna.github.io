@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Mar 23, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna</h4>
+
+## Linked List
+
+Here is the code that implements a linked list in java, taken from the class slides (code from *Big Java* by Cay Horstmann, John Wiles & Sons (2009)):
+
+```java
+import java.util.NoSuchElementException;
+
+/**
+ * A linked list is a sequence of nodes with efficient element insertion and
+ * removal. This class contains a subset of the methods of the standard
+ * java.util.LinkedList class.
+ */
+public class LinkedList {
+
+    private class Node {
+        public Object data;
+        public Node next;
+    }
+
+    private Node first;
+
+    /** Constructs an empty LinkedList */
+    public LinkedList() {
+        first = null;
+    }
+
+    /**
+     * Returns the first element in the linked list.
+     * 
+     * @return the first element in the linked list
+     */
+    public Object getFirst() throws NoSuchElementException {
+        if (first == null)
+            throw new NoSuchElementException();
+        return first.data;
+    }
+
+    /**
+     * Adds an element to the front of the linked list.
+     * 
+     * @param element
+     *            the element to add
+     */
+    public void addFirst(Object obj) {
+        Node newNode = new Node();
+        newNode.data = obj;
+        newNode.next = first;
+        first = newNode;
+    }
+
+    /**
+     * Removes the first element in the linked list.
+     * 
+     * @return the removed element
+     */
+    public Object removeFirst() throws NoSuchElementException {
+        if (first == null)
+            throw new NoSuchElementException();
+        Object obj = first.data;
+        first = first.next;
+        return obj;
+    }
+
+    public static void main(String[] args) {
+        LinkedList l = new LinkedList();
+        l.addFirst(3);
+        l.addFirst(4);
+        l.addFirst(5);
+        l.removeFirst();
+        l.addFirst(6);
+        while (true) {
+            try {
+                System.out.printf("%d, ", l.removeFirst());
+            } catch (NoSuchElementException e) {
+                break;
+            }
+        }
+        // Expected output: 6, 4, 3
+    }
+
+}
+```
+
+---
+
+## Exercise 1: Stack
+
+Modify the LinkedList class above to implement a stack (a last-in-first-out data structure). Here's a skeleton class to get you started:
+
+```java
+import java.util.NoSuchElementException;
+
+/**
+ * A stack is a Last In First Out (LIFO) data structure. New items are added to
+ * the top of the stack, and items are removed from the top of the stack in the
+ * reverse order in which they were added.
+ */
+public class Stack {
+
+    private class Node {
+        public Object data;
+        public Node next;
+    }
+
+    ...
+
+    /** Constructs an empty stack */
+    public Stack() {
+        ...
+    }
+
+    /**
+     * Check if the stack is empty.
+     * 
+     * @return true if the stack is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        ...
+    }
+    
+    /**
+     * Returns the top element in the stack, without removing it.
+     * 
+     * @return the top element in the stack
+     */
+    public Object peek() throws NoSuchElementException {
+        ... 
+    }
+
+    /**
+     * Adds an element to the top of the stack.
+     * 
+     * @param element
+     *            the element to add
+     */
+    public void push(Object obj) {
+        ...
+    }
+
+    /**
+     * Removes the top element of the stack.
+     * 
+     * @return the removed element
+     */
+    public Object pop() throws NoSuchElementException {
+        ...
+    }
+
+    public static void main(String[] args) {
+        Stack l = new Stack();
+        l.push(3);
+        l.push(4);
+        l.push(5);
+        l.pop();
+        l.push(6);
+        while (!l.isEmpty()) {
+            System.out.printf("%d, ", l.pop());
+        }
+        // Expected output: 6, 4, 3
+    }
+}
+```
+
+---
+
+## Exercise 2: Queue
+
+Now modify the LinkedList class to implement a queue (a first-in-first-out data structure). Here's a skeleton class:
+
+```java
+import java.util.NoSuchElementException;
+
+/**
+ * A queue is a First In First Out (FIFO) data structure. New items are added to
+ * the back of the queue, and items are removed from the front of the queue in
+ * the same order in which they were added.
+ */
+public class Queue {
+
+    private class Node {
+        public Object data;
+        public Node next;
+    }
+
+    ...
+
+    /** Constructs an empty queue */
+    public Queue() {
+        ...
+    }
+
+    /**
+     * Check if the queue is empty.
+     * 
+     * @return true if the queue is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        ...
+    }
+
+    /**
+     * Returns the element in the front of the queue, without removing it.
+     * 
+     * @return the first element in the queue
+     */
+    public Object peek() throws NoSuchElementException {
+        ...
+    }
+
+    /**
+     * Adds an element to the back of the queue.
+     * 
+     * @param element
+     *            the element to add
+     */
+    public void add(Object obj) {
+        ...
+    }
+
+    /**
+     * Removes the first element in the queue.
+     * 
+     * @return the removed element
+     */
+    public Object poll() throws NoSuchElementException {
+        ...
+    }
+
+    public static void main(String[] args) {
+        Queue l = new Queue();
+        l.add(3);
+        l.add(4);
+        l.add(5);
+        l.poll();
+        l.add(6);
+        while (true) {
+            try {
+                System.out.printf("%d, ", l.poll());
+            } catch (NoSuchElementException e) {
+                break;
+            }
+        }
+        // Expected output: 4, 5, 6
+    }
+}
+```
+
+---
+
+## Optional Exercise
+
+Can you implement a queue using two stacks? Here's skeleton code to get you started:
+
+```java
+import java.util.NoSuchElementException;
+
+/**
+ * A queue is a First In First Out (FIFO) data structure. New items are added to
+ * the back of the queue, and items are removed from the front of the queue in
+ * the same order in which they were added.
+ * 
+ * This implementation uses two stacks instead of a linked list.
+ */
+public class StackyQueue {
+    private Stack stack1, stack2;
+
+    /** Constructs an empty queue */
+    public StackyQueue() {
+        ...
+    }
+
+    /**
+     * Check if the queue is empty.
+     * 
+     * @return true if the queue is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        ...
+    }
+
+    /**
+     * Returns the element in the front of the queue, without removing it.
+     * 
+     * @return the first element in the queue
+     */
+    public Object peek() throws NoSuchElementException {
+        ...
+    }
+
+    /**
+     * Adds an element to the back of the queue.
+     * 
+     * @param element
+     *            the element to add
+     */
+    public void add(Object obj) {
+        ...
+    }
+
+    /**
+     * Removes the first element in the queue.
+     * 
+     * @return the removed element
+     */
+    public Object poll() throws NoSuchElementException {
+        ...
+    }
+
+    public static void main(String[] args) {
+        StackyQueue l = new StackyQueue();
+        l.add(3);
+        l.poll();
+        l.add(4);
+        l.add(5);
+        l.poll();
+        l.add(6);
+        l.add(7);
+        while (true) {
+            try {
+                System.out.printf("%d, ", l.poll());
+            } catch (NoSuchElementException e) {
+                break;
+            }
+        }
+        // Expected output: 5, 6, 7
+    }
+}
+```
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+
+
+</html>

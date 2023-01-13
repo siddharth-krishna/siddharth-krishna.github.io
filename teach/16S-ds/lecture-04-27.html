@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Apr 28, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Marcelo Cicconet & Siddharth Krishna</h4>
+
+## Exercises on Hashmaps
+
+1. Read the overview part of the [Java documentation](https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html) about the HashMap class.
+Look for the definition of the following concepts: initial capacity, load factor.
+
+2. Implement a class called `HashMapApp` to test the usage of HashMap.
+In the main method, instantiate a HashMap to hold 100 key/value pairs,
+where keys are integers (class `Integer`) from 0 to 99,
+and values are strings (class `String`). Insert pairs (using the method `put()`)
+as follows: integer `i` maps to string `"integer i"`.
+Afterwards, loop through all keys in the HashMap and print the corresponding values.
+(using the method `get()`) to verify it's working.
+Use the default parameters for `initialCapacity` and `loadFactor`.
+
+3. Modify the implementation in (2) to hold 100,000 pairs.
+
+  - Use `System.nanoTime()` to measure the time it takes to build the hash map.
+
+  - Use `System.nanoTime()` to measure the time it takes to get all values
+from the hash map (call `get()` without printing the output though, since
+we're not interest in the time it takes to print the values).
+
+  - To make time-measurements more roubust, measure the average times
+of 10 runs of the operations in the above two subparts.
+
+  - Change the `initialCapacity` parameter, going over a few orders of magnitude (from the
+original up to around 100,000).
+How do "build" and "recover" times change? Explain.
+
+  - Change the `loadFactor` parameter, testing a few different values from the original to about 1000.
+How do "build" and "recover" times change? Explain.
+
+### Solution
+
+```java
+import java.util.HashMap;
+
+public class HashMapApp {
+	public static void main(String args[]) {
+		int n = (int) 10e5;
+		
+		int initialCapacity = (int) 10e5; // default 16
+		float loadFactor = 0.75f; // default 0.75
+		
+		int nRuns = 10;
+		long avgTimePut = 0;
+		long avgTimeGet = 0;
+		long startTime, estimatedTime;
+		for (int run = 0; run < nRuns; run++) {
+			HashMap<Integer,String> hashMap = 
+			        new HashMap<Integer,String>(initialCapacity, loadFactor);
+			startTime = System.nanoTime();    
+			for (int i = 0; i < n; i++) {
+				hashMap.put(i, "integer "+i);
+			}
+			estimatedTime = System.nanoTime()-startTime;
+			avgTimePut += estimatedTime;
+			
+			startTime = System.nanoTime();
+			for (int i = 0; i < n; i++) {
+				hashMap.get(i);
+			}
+			estimatedTime = System.nanoTime()-startTime;
+			avgTimeGet += estimatedTime;
+		}
+		System.out.println("estimated time | put: "+(double)avgTimePut/10e6/nRuns+" mili-seconds");
+		System.out.println("estimated time | get: "+(double)avgTimeGet/10e6/nRuns+" mili-seconds");
+	}
+}
+
+```
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+
+
+</html>

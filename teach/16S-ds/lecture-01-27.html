@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Jan 27, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna</h4>
+
+## Exercise 1
+What does the following program print?
+
+```java
+public class Circle {
+    int radius;
+
+    public Circle(int r) {
+	radius = r;
+    }
+    
+    public int getRadius() {
+	return radius;
+    }
+
+    public void setRadius(int r) {
+	radius = r;
+    }
+
+    public static void main(String a[]) {
+	Circle c1 = new Circle(5);
+	Circle c2 = new Circle(17);
+	c1 = c2;
+    
+	System.out.printf("The radius of circle c1 is: %d\n",
+			  c1.getRadius() );
+	System.out.printf("The radius of circle c2 is: %d\n",
+			  c2.getRadius() );
+	c1.setRadius(25);
+    
+	System.out.printf("The radius of circle c1 is: %d\n",
+			  c1.getRadius() );
+	System.out.printf("The radius of circle c2 is: %s\n",
+			  c2.getRadius() );
+    }
+}
+```
+(Program taken from http://cs.nyu.edu/~joannakl/cs102.03_s16/notes/lecture01_Intro.pdf)
+
+### Answer
+```
+The radius of circle c1 is: 17
+The radius of circle c2 is: 17
+The radius of circle c1 is: 25
+The radius of circle c2 is: 25
+```
+
+### Explanation
+`c1` and `c2` are not the Circle objects themselves, but *references* to two Circle objects. The assignment `c1 = c2;` makes the reference `c1` point to the same Circle object that `c2` points to.
+
+---
+
+## Exercise 2
+What does the following program print?
+
+```java
+public class Diabolical {
+
+    public static void f(A x) {
+        A y = x;
+        y.key = x.key + 1;
+    }
+
+    public static void f(B x) {
+        B y = new B();
+        y.key = x.key + 2;
+    }
+
+    public static void main(String[] args) {
+        A p = new A( );
+        p.key = 3;
+        B q = new B( );
+        q.key = 10;
+        f(p);
+        System.out.println(p.key);
+        f(q);
+        System.out.println(q.key);
+        p = q;
+        f(p);
+        System.out.println(p.key);
+    }
+}
+class A {
+    public int key;
+}
+class B extends A {
+}
+```
+(Program from http://cs.nyu.edu/~joannakl/cs102.03_s16/assignments/hwk01.pdf)
+
+### Answer
+```
+4
+10
+11
+```
+
+### Explanation
+There are many concepts at play in this program.
+
+The function `f` is **overloaded** - i.e. there are two functions with the same name, the only difference being the type of the argument passed to it. Thus, when it is called as `f(o)`, the type of the object `o` determines which version is called. Thus, the first call to `f` calls the first function, as `p` has type `A`. Similarly, the second call to `f` calls the second function. Finally, the third call calls the first function again, because the reference variable `p` is of type `A`, even though the object it is pointing to has type `B`.
+
+**Key idea**: if there are many functions with the same name, differing only in the type of its argument, then which function is called depends on the type of the reference variable passed to it. Not on the type of the object pointed to by the reference.
+
+The first function call increments the key of the object passed to it. This is because `x` is a reference to some object, and the statement `A y = x;` creates a new reference `y` that points to the same object that `x` points to. Thus when we increment `y.key`, it looks up the object pointed to by `y` (which is the same as the object `x` points to) and increments its key.
+
+The second function does not increment anything. In its first line, it creates a reference `y`, but points it to a completely new object. The second line sets the key of this new object to `x.key + 2`, but crucially, this does not change the value of `x.key`. Hence, the key of the object passed to the second function does not change.
+
+---
+
+## Exercise 3: Project Euler
+
+Check out <https://projecteuler.net/>. I encourage everyone to create an account on this site and solve the problems on it. It is great practice and good fun.
+
+In class we solved the first problem, "Multiples of 3 and 5". In accordance with the spirit of Project Euler, I shall not post the solution here, but do try to code it up yourself at home!
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+</html>

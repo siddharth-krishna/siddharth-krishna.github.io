@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <title>Fundamental Algorithms, Recitation: Oct 20, 2017</title>
+
+<xmp theme="journal" style="display:none;">
+<h4 style="text-align:right;">[Back to Recitation Home](index.html)</h4>
+
+## Dynamic Programming
+
+### Word Processing
+
+Recall, the problem: you are given $n$ words, of lengths $l_1, l_2, \dotsc, l_n$, and you need to arrange them into a paragraph where each line can fit up to $M$ characters, while minimizing the cost of the arrangement.
+The cost of a given arrangement of words is the sum of the cubes of the number of extra spaces at the end of each line.
+We can assume that each word fits in the line, i.e. $l_i \leq M$.
+Let's see how to compute the minimal cost.
+
+Let $c_i$ be the minimal cost of arranging words $i, i+1, \dotsc, n$ in a paragraph where each line has length $M$.
+We break down the problem by looking at the first line of the optimal arrangement, which contains words $i, i+1, \dotsc, j$.
+The rest of the lines will contain the optimal arrangement of words $j+1, \dotsc, n$ (Exercise: prove this using a cut & paste argument).
+So we define $c_i$ as follows:
+$$ c_i =
+\begin{cases}
+0 & \text{if $i > n$ (base case: no words left)} \\
+\min_{i \leq j \leq n} (cost(i, j) + c_{j+1}) & \text{otherwise.}
+\end{cases}$$
+
+Here, $cost(i, j)$ is the cost of putting words $i, \dotsc, j$ on a line, i.e. the cube of the number of extra spaces at the end.
+Since we have to put 1 space between every two words (so $(j-i)$ spaces in total), the line has length $\sum_{k = i}^j l_k + (j-i)$, so we can define $cost(i, j)$ by:
+$$ cost(i, j) =
+\begin{cases}
+\infty & \text{if } \sum_{k = i}^j l_k + (j-i) > M \text{ (base case: words don't fit)} \\
+(M - \sum_{k = i}^j l_k - (j-i))^3 & \text{otherwise.}
+\end{cases}$$
+Note: if the problem specifies that we don't need to count the extra spaces on the last line in the cost, then we can easily modify this to add another case where $cost(i, j) = 0$ if $j = n$.
+
+The final answer is $c_1$, and this can be computed either by memoization on $c$ or bottom-up by computing the values of $c_i$ starting at $n$ and working down.
+Since each $c_i$ depends on a linear number of other $c_j$s, and $cost(i, j)$ can be computed in O(1) if we do some smart linear time pre-processing (Exercise: how?), the total running time is $O(n^2)$.
+
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+</html>

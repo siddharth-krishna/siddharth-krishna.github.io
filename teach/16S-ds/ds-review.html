@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Review of Data Structures</title>
+    <meta charset="utf-8">
+    <!-- Bootrap stylesheet -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style>
+     body {
+         font-family: sans-serif;
+     }
+     p {
+         font-size: 1.4em;
+     }
+     table {
+         margin: 0 auto;
+         font-size: 1.6em;
+     }
+     img {
+         display: block;
+         margin: 0 auto;
+     }
+     pre {
+	 background-color: white;
+	 border: none;
+     }
+     .remark-code {
+	 font-size: 14px;
+     }
+     .footnote {
+	 font-size: 8px;
+	 color: grey;
+	 display: block;
+	 text-align: right;
+	 position: absolute;
+	 bottom: 20px;
+	 left: 20px;
+     }
+     table {
+	 font-size: 14px;
+     }
+     .highlight {
+	 background-color: rgba(255, 255, 0, 0.5) !important;
+     }
+    </style>
+
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Data Structures: Review
+
+May 4, 2016
+
+Siddharth Krishna  
+
+.footnote[Some slides adapted from [Justin Zhao](http://www.columbia.edu/~jxz2101/)]
+
+---
+
+# Gameplan
+
+* Arrays, Lists, ArrayLists
+
+* Stacks, Queues
+
+* Sets: BSTs, Hash Tables
+
+* Heaps
+
+* Graphs
+
+---
+
+# Arrays
+
+<br>
+```
+int[] array = {35, 33, 42, 10, 14, 19, 27, 44, 26, 31};
+
+```
+<br><br>
+![Array](http://www.tutorialspoint.com/data_structures_algorithms/images/array_representation.jpg)
+.footnote[Picture credit: www.tutorialspoint.com]
+
+---
+
+# Linked Lists
+
+<br><br>
+![Linked List](http://upload.wikimedia.org/wikipedia/commons/1/1b/C_language_linked_list.png)
+
+---
+
+# Linked Lists
+```
+public class LinkedList {
+
+    private class Node {
+        public Object data;
+        public Node next;
+    }
+
+    private Node first;
+
+    public LinkedList() {...}
+
+    public Object getFirst() throws NoSuchElementException {...}
+
+    public void addFirst(Object obj) {...}
+
+    public Object removeFirst() throws NoSuchElementException {...}
+
+    public Object get(int index) throws NoSuchElementException {...}
+}
+```
+
+---
+
+# Performance Comparison
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Linear traversal</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# Linked Lists with Tails
+```
+public class LinkedList {
+
+    private class Node {
+        public Object data;
+        public Node next;
+    }
+
+    private Node first;
+*   private Node last;
+
+    public LinkedList() {...}
+
+    public Object getFirst() throws NoSuchElementException {...}
+
+    public void addFirst(Object obj) {...}
+
+    public Object removeFirst() throws NoSuchElementException {...}
+
+    public Object get(int index) throws NoSuchElementException {...}
+}
+```
+
+---
+
+# Performance Comparison
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Linear traversal</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td class="highlight">O(1)</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# ArrayLists
+
+Best of both worlds?
+
+Use an array, and copy over to a new one when we run out of space.
+
+![ArrayList](https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Dynamic_array.svg/220px-Dynamic_array.svg.png)
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Performance Comparison
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Linear traversal</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td class="highlight">O(1)</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td class="highlight">O(1)</td>
+	</tr>
+    </tbody>
+</table>
+
+<br><br>
+<small>Note: highlighted cells are *amortized* complexity (i.e. on average).</small>
+
+---
+
+# Lists: Standard Library
+
+        import java.util.LinkedList;
+        import java.util.ArrayList;
+        import java.util.List;
+
+        // ...
+
+        List<Integer> a = new ArrayList<Integer>();
+        List<Integer> b = new LinkedList<Integer>();
+
+        for (int i = 0; i < 10; i++) {
+            a.add(i);
+            b.add(i);
+        }
+        a.set(5, 0);
+        b.remove(5);
+        System.out.println(a); // [0, 1, 2, 3, 4, 0, 6, 7, 8, 9]
+        System.out.println(b); // [0, 1, 2, 3, 4, 6, 7, 8, 9]
+
+---
+
+# Stacks
+
+<br><br>
+![Stacks](http://www.tutorialspoint.com/data_structures_algorithms/images/stack_representation.jpg)
+
+.footnote[Picture credit: www.tutorialspoint.com]
+---
+
+# Stacks
+
+    // Last-in first-out data structure
+    public interface MyStack {
+        // Add a value to the stack
+        public void push(int value);
+
+        // Remove a value from the stack
+        public int pop();
+
+        // See the value on the "top" of the stack (next to be removed)
+        public int peek();
+    }
+
+    MyStack a = ...; // [ ]
+    a.push(1); // [ 1 ]
+    a.push(2); // [ 2 1 ]
+    a.peek(); // returns 2
+    a.push(3); // [ 3 2 1 ]
+    a.pop(); // [ 2 1 ], returns 3
+    a.push(4); // [ 4 2 1 ]
+    a.peek(); // returns 4
+---
+
+# Stack Implementations
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Linear traversal</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+    </tbody>
+</table>
+
+<img alt ="Stack using Linked list" src="http://3.bp.blogspot.com/-FNaDDc-qOQE/VOqu9wvfdrI/AAAAAAAAAXk/iaK0VpqW9Ew/s1600/Stack1.jpg" style="width: 50%">
+.footnote[Picture credit: www.enterjava.com]
+
+---
+
+# Stacks: Standard Library
+
+```
+import java.util.*;
+
+...
+
+    Stack<Integer> a = new Stack<Integer>();
+
+    a.push(1);
+    a.push(2);
+    System.out.println(a.pop()); // 2
+    a.push(3);
+    System.out.println(a); // [1, 3]
+```
+---
+
+# Queues
+
+<br><br>
+![Queue](http://www.tutorialspoint.com/data_structures_algorithms/images/queue_example.jpg)
+
+.footnote[Picture credit: www.tutorialspoint.com]
+
+---
+
+# Queues
+
+    // First-in first-out data structure
+    public interface MyQueue {
+        // Add a value to the back of the queue
+        public void enqueue(int value);
+
+        // Remove a value from front of the queue
+        public int dequeue();
+
+        // See the value on the "front" of the queue (next to be removed)
+        public int peek();
+    }
+
+    MyStack a = ...; // [ ]
+    a.enqueue(1); // [ 1 ]
+    a.enqueue(2); // [ 1 2 ]
+    a.peek(); // returns 1
+    a.enqueue(3); // [ 1 2 3 ]
+    a.dequeue(); // [ 2 3 ], returns 1
+    a.enqueue(4); // [ 2 3 4 ]
+    a.peek(); // returns 2
+
+---
+
+# Queue Implementations
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Linear traversal</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+    </tbody>
+</table>
+
+![Queue using Linked List](http://scanftree.com/Data_Structure/queues.png)
+.footnote[Picture credit: scanftree.com]
+---
+
+# Queues: Standard Library
+
+```
+import java.util.*;
+
+...
+
+    Queue<Integer> q = new LinkedList<Integer>();
+
+    q.add(1);
+    q.add(2);
+    System.out.println(q.remove()); // 1
+    q.remove(3);
+    System.out.println(q); // [1, 3]
+```
+
+---
+
+# Set ADT
+
+Keep track of a set of objects, and support the following three operations:
+
+* `insert(x)`
+* `delete(x)`
+* `find(x)`
+
+---
+
+# Set Implementations
+
+<table class="table table-striped">
+	<thead>
+	<tr>
+	    <th>Operation</th> <th>Sorted Array</th> <th>Sorted List</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td>
+	</tr>
+    </tbody>
+</table>
+
+<br><br>
+Can we do better?
+
+---
+
+# Trees
+
+![Tree](http://upload.wikimedia.org/wikipedia/commons/f/f7/Binary_tree.svg)
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Trees
+
+```
+    public class Node {
+        public int value;
+        public Node left;
+        public Node right;
+
+        public Node(int value, Node left, Node right) {
+            this.value = value;
+            this.left = left;
+            this.right = right;
+        }
+
+        public Node(int value) {
+            this(value, null, null);
+        }
+    }
+```
+
+---
+
+# Binary Search Tree
+
+**Binary Search Tree**: every value in the left subtree of a node with a value is less than that value; every value in the right subtree of a node with a value is greater than that value.
+
+This gives us O(log(n)) retrieval (in the average case).
+
+---
+
+# Binary Search Tree
+
+![BST](http://upload.wikimedia.org/wikipedia/commons/d/da/Binary_search_tree.svg)
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Binary Search Tree
+
+```
+    public boolean find(Node root, int value) {
+        if (root == null) {
+            return false;
+        }
+        if (value < root.value) {
+            return find(root.left, value);
+        } else if (value > root.value) {
+            return find(root.right, value);
+        } else {
+            return true;
+        }
+    }
+```
+
+---
+
+# Set Implementations
+
+<table class="table table-striped">
+	<thead>
+	<tr>
+	    <th>Operation</th> <th>Sorted Array</th> <th>Sorted List</th> <th>BST</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+<br><br>
+Can we do even better?
+
+---
+
+# Hash Tables
+
+Suppose we had a really really big array.
+
+```
+    arr[0] = 0; // insert(): O(1)
+    arr[1] = null; // delete(): O(1)
+    if (arr[2] != null) {...} // find(): O(1)
+```
+
+Insert, find, and delete are all O(1) now. That's it?
+
+--
+
+Problem 1: What if we want to store non-integer objects?
+
+Want indices that can be any object:
+```
+    arr["0"] = "0";
+    arr["Adam Cannon"] = "Adam Cannon";
+    arr["BullsAndCows"] = "BullsAndCows";
+    arr["thisisareallylongstringthatistoocoolomgomgomgomgomgomgadiadiadilove"] =
+	    "thisisareallylongstringthatistoocoolomgomgomgomgomgomgadiadiadilove";
+```
+
+---
+
+# Hash Tables
+
+Problem 2: How big should the array be?
+
+An infinite size array for infinite possible indexes is unreasonable.
+
+As it turns out, however, there's a way to simplify anything (String, object, integer) into an integer
+
+This is called the **Hash function**: maps an object (of some type) to an integer.
+
+Example:
+
+```
+x % 10027
+"mylongstring".length()
+```
+
+---
+
+# Hash Tables
+
+**Hash function**: maps an object (of some type) to an integer.
+
+Better example:
+
+```
+    public int hash(String s) {
+        int hashVal = 0;
+        for (int i = 0; i < s.length(); i++) {
+            hashVal = s.charAt(i) + hashVal * 37;
+        }
+        return hashVal;
+    }
+```
+
+---
+
+# Hash Tables
+
+For insert():
+
+1. Take any thing `X`
+2. Simplify `X` into an integer `i` using a hash function
+3. Set `arr[i] = X`
+
+For find():
+
+1. Take any thing `X` that you want to look for
+2. Simplify `X` into an integer `i` using the same hash function
+3. Check if `arr[i] == X`
+
+---
+
+# Hash Tables
+
+This is awesome!
+
+Well, there are some problems with hash tables.
+
+* Requires a lot of extra memory and a good hash function to avoid collisions
+* What is a "good" hash function?
+* Finding max or min is kind of difficult
+
+But in general: excellent for what it can do.
+
+---
+
+# Hash Tables: Standard library
+
+```
+    import java.util.HashSet;
+
+    // ...
+
+    HashSet<String> set = new HashSet<String>();
+    set.add("dog");
+    set.add("cat");
+    set.add("fish");
+    System.out.println(set.contains("dog")); // true
+    System.out.println(set.contains("horse")); // false
+```
+
+---
+
+# Set Implementations
+
+<table class="table table-striped">
+	<thead>
+	<tr>
+	    <th>Operation</th> <th>Sorted Array</th> <th>Sorted List</th> <th>BST</th> <th>Hash Table</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# More about Trees: Traversal
+
+We can traverse a tree in one of a few ways.
+
+## Pre-Order (XLR)
+
+![preorder](http://upload.wikimedia.org/wikipedia/commons/d/d4/Sorted_binary_tree_preorder.svg)
+
+FBADCEGIH
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Trees: Traversal
+
+We can traverse a tree in one of a few ways.
+
+## In-Order (LXR)
+
+![inorder](http://upload.wikimedia.org/wikipedia/commons/7/77/Sorted_binary_tree_inorder.svg)
+
+ABCDEFGHI
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Trees: Traversal
+
+We can traverse a tree in one of a few ways.
+
+## Post-Order (LRX)
+
+![postorder](http://upload.wikimedia.org/wikipedia/commons/9/9d/Sorted_binary_tree_postorder.svg)
+
+ACEDBHIGF
+
+.footnote[Picture credit: Wikipedia]
+
+---
+
+# Priority Queue ADT
+
+Say we want to keep track of customers in a queue, but instead of serving the first customer in line first, we want to serve the customer with highest priority in the queue first.
+
+Operations:
+
+* `insert(x)`
+* `delete_max()`
+
+Equivalently, if we wanted to process lowest priority first:
+
+* `delete_min()`
+
+Let's discuss the min case here, the other one is similar.
+
+---
+
+# Trees: Heap
+
+The maximally efficient way to implement this ADT is with a heap (`O(log n)` performance for both operations)
+
+Min Heap Property: Parents always have higher priority than their children
+
+<img alt ="Min heap" src="http://algorithms.tutorialhorizon.com/files/2015/02/Min-Heap.png" style="width: 60%">
+
+.footnote[Picture credit: algorithms.tutorialhorizon.com]
+
+---
+
+# Min Heap: Insert
+
+To add an element: insert and reorder the tree (`O(log n)`)
+
+![Heap Insert](http://algorithms.tutorialhorizon.com/files/2015/02/Insert-Bubble-Up-Min-Heap.gif)
+
+.footnote[Picture credit: algorithms.tutorialhorizon.com]
+
+---
+
+# Min Heap: Delete Min
+
+To remove the smallest element: pop the root out and reorder the tree (`O(log n)`)
+
+![Heap Insert](http://algorithms.tutorialhorizon.com/files/2015/02/Delete-OR-Extract-Min-from-Heap.gif)
+
+.footnote[Picture credit: algorithms.tutorialhorizon.com]
+
+---
+
+# When to use what?
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# When to use: Arrays
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr class="highlight">
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# When to use: Lists
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# When to use: ArrayLists
+
+<table class="table table-striped">
+	<thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr class="highlight">
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# When to use: <small>BSTs, Hash Tables</small>
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# When to use: Heaps
+
+<table class="table table-striped">
+    <thead>
+	<tr>
+	    <th>Operation</th> <th>Array</th> <th>List</th> <th>ArrayList </th> <th>BST</th> <th>Hash Table</th> <th>Heap</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+	    <td>Random access</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Append front</td> <td>O(n)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove front</td> <td>O(1)</td> <td>O(1)</td> <td>O(n)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Append back</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr>
+	    <td>Remove back</td> <td>O(1)</td> <td>O(n)</td> <td>O(1)</td>  <td>-</td> <td>-</td> <td>-</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Insert</td> <td>O(n)</td> <td>O(n)</td>  <td>O(n)</td> <td>O(log(n))</td> <td>O(1)</td> <td>O(log(n))</td>
+	</tr>
+	<tr>
+	    <td>Delete</td> <td>O(n)</td> <td>O(n)</td> <td>O(n)</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr>
+	    <td>Find</td> <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>  <td>O(log(n))</td> <td>O(1)</td> <td>O(n)</td>
+	</tr>
+	<tr class="highlight">
+	    <td>Delete Min</td> <td>O(n)</td> <td>O(1)</td> <td>O(1)</td>  <td>O(log(n))</td> <td>O(n)</td> <td>O(log(n))</td>
+	</tr>
+    </tbody>
+</table>
+
+---
+
+# Graphs
+
+ADT consisting of Nodes and Edges
+
+![heap](http://upload.wikimedia.org/wikipedia/commons/a/a2/Directed.svg)
+
+---
+
+# Graphs
+
+Basic operations:
+
+* `adjacent(G, x, y)`: tests whether there is an edge from node x to node y.
+* `neighbors(G, x)`: lists all nodes y such that there is an edge from x to y.
+* `add(G, x, y)`: adds to G the edge from x to y, if it is not there.
+* `delete(G, x, y)`: removes the edge from x to y, if it is there.
+* `get_node_value(G, x)`: returns the value associated with the node x.
+* `set_node_value(G, x, a)`: sets the value associated with the node x to a.
+* `get_edge_value(G, x, y)`: returns the value associated to the edge (x,y).
+* `set_edge_value(G, x, y, v)`: sets the value associated to the edge (x,y) to v.
+
+---
+
+# Graphs: Implementation
+
+One way is to use an "adjacency list": We have a list of nodes and every node stores a list of adjacent nodes.
+
+    public class Node {
+      public int value;
+      public ArrayList<Edges> edges;
+    }
+
+    public class Edge {
+      public Node destination;
+      public int weight;
+    }
+
+    public class Graph {
+      public ArrayList<Node> nodes;
+    }
+
+---
+
+# Graphs: Performance
+
+Say we have V nodes and E edges.
+
+What is the performance for these operations?
+
+* Add vertex
+* Add edge
+* Remove vertex
+* Remove edge
+
+Depends on implementation, but this is something you look up.
+
+---
+# Graphs: Searching
+
+Problem: Given a node, can we reach this other node?
+
+Search!
+
+http://visualgo.net/dfsbfs
+
+---
+# Graphs: Depth First Search (DFS)
+
+    bool search(Node root, Node dest) {
+      if (root.value == dest.value)
+        return true;
+      root.visited = true;
+      for (Node n : root.adjacent) {
+        if (!n.visited) {
+          if (search(n, dest))
+            return true;
+        }
+      }
+      return false;
+    }
+
+---
+
+# Graphs: Breadth First Search (BFS)
+
+    bool search(Node root, Node dest) {
+      Queue q = new Queue();
+      if (root.value == dest.value)
+        return true;
+      root.visited = true;
+      q.enqueue(root);
+      while (!q.isEmpty()) {
+        Node r = q.dequeue();
+        for (Node n in r.adjacent) {
+          if (!n.visited) {
+            if (search(n, dest))
+              return true;
+            queue.enqueue(n);
+          }
+        }
+      }
+      return false;
+    }
+
+---
+
+class: center, middle
+
+Thank you!
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+var slideshow = remark.create({
+	 ratio: "4:3",
+	 highlightLanguage: "java",
+	 highlightStyle: "solarized-light",
+	 highlightLines: true,
+	 navigation: {scroll: false}
+     });
+    </script>
+  </body>
+</html>

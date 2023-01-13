@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <title>Data Structures, Recitation: Feb 17, 2016 </title>
+
+<xmp theme="simplex" style="display:none;">
+<h4 style="text-align:right;">Siddharth Krishna</h4>
+
+## Exercise 1 & 2
+See the file `Recitation-Notes-02-17.pdf` on NYUClasses for the exercises.
+
+### Solution to Exercise 1
+
+Java code for recursive binary search:
+
+```java
+public class BinSearch {
+	public static int bs(int[] a, int b, int lo, int hi) {
+		System.out.printf("bs(%d, %d)\n", lo, hi);
+		if (lo > hi) return -1;
+				
+		int mid = (lo + hi)/2;
+		if (a[mid] == b)
+			return mid;
+		else if (a[mid] > b)
+			return bs(a, b, lo, mid - 1);
+		else
+			return bs(a, b, mid + 1, hi);
+	}
+	public static void main(String[] args) {
+		int a[] = {1, 5, 6, 13, 15, 34, 66, 77, 93};
+		System.out.print(bs(a, 5, 0, a.length - 1));
+
+	}
+
+}
+```
+
+Tracing binary search on array `a[] = {1, 5, 6, 13, 15, 34, 66, 77, 93}` with `key = 5`:
+
+Since the length of `a` is `9`, the first call to `bs()` would be:
+```
+(1)    bs(a, 5, 0, 8)
+```
+
+In this call, `mid = 4`, and since `a[4] = 15 > 5`, the first recursive call will be made, and so the second call will be:
+```
+(2)    bs(a, 5, 0, 3)
+```
+
+Now, `mid = 1`, and since `a[1] = 5`, the first `if` statement will fire, and call (2) returns `1`. Call (1) returns the return value of call (2), and hence the overall answer will be `1`.
+
+This can be verified by running the main method of the java code given above.
+
+---
+
+### Solution to Exercise 2
+(credits: Marcelo Cicconet)
+
+Finding the minimum of `{1.2,77,44,89,13,4,0.8,15}` recursively, using a method with signature `min(double[] x, int start, int end)`.
+
+
+#### "Visual" Recursion Tracing
+```
+min(x,0,7)
+	min1 = min(x,0,3)
+		min1 = min(x,0,1)
+			min1 = min(x,0,0)
+			min2 = min(x,1,1)
+		min2 = min(x,2,3)
+			min1 = min(x,2,2)
+			min2 = min(x,3,3)
+	min2 = min(x,4,7)
+		min1 = min(x,4,5)
+			min1 = min(x,4,4)
+			min2 = min(x,5,5)
+		min2 = min(x,6,7)
+			min1 = min(x,6,6)
+			min2 = min(x,7,7)
+```
+
+#### Java Code
+
+```java
+public class Main {
+	public static void main(String[] args) {
+		double x[] = {1.2,77,44,89,13,4,0.8,15};
+		double minX = rm(x,0,x.length-1);
+		System.out.println("min = "+minX);
+	}
+	
+	// recursive minimum
+	static double rm(double[] x, int start, int end) {
+		if (end == start) {
+			return x[start];
+		}
+		int mid = (start+end)/2;
+		
+		System.out.printf("compute min1 for interval [%d, %d]\n", start,mid);
+		double min1 = rm(x,start,mid);
+		
+		System.out.printf("compute min2 for interval [%d, %d]\n", mid+1,end);
+		double min2 = rm(x,mid+1,end);
+		
+		if (min1 <= min2) {
+			return min1;
+		} else {
+			return min2;
+		}
+	}
+}
+```
+
+#### Output of Code Above (compare with "visual" tracing)
+```
+compute min1 for interval [0, 3]
+compute min1 for interval [0, 1]
+compute min1 for interval [0, 0]
+compute min2 for interval [1, 1]
+compute min2 for interval [2, 3]
+compute min1 for interval [2, 2]
+compute min2 for interval [3, 3]
+compute min2 for interval [4, 7]
+compute min1 for interval [4, 5]
+compute min1 for interval [4, 4]
+compute min2 for interval [5, 5]
+compute min2 for interval [6, 7]
+compute min1 for interval [6, 6]
+compute min2 for interval [7, 7]
+min = 0.8
+```
+
+---
+
+## Optional Problem: Mountain climbing
+*(Only done in section 007, completely optional, no grades. This is the kind of problem that will be asked in interviews if you apply for a software engineering job at Google/Facebook.)*
+
+Supposing you want to find the maximum element in an array. Since we are all pros at recursion, we know that we can adapt the code that finds minimum (for example in Exercise 2), and make it find the maximum instead. But that code uses *binary recursion*. Every non-base case call to `min()` makes *two* recursive calls to itself. The question is, can you do it with only one recursive call?
+
+Well, to make the problem simpler, assume that the input array is not sorted, but of this special form: the numbers are all distinct, and are sorted in ascending order until some index (which is not known in advance), and after this index the numbers are sorted in descending order. For example, here are two arrays that are of this form:
+```
+{1, 3, 5, 18, 11, 4, 2, -20}
+{-3, -1, 4, 6, 3, 2, 0}
+```
+
+Challenge: design an algorithm that does not read every element of the array, and that only makes one recursive call, that can find the "peak" - the maximum element in this array.
+
+### Solution
+
+The basic idea is to adapt the binary search procedure. In binary search, we look at the midpoint of the array, and based on whether the number at the midpoint is bigger or smaller than the target number, we shrink the array by half. Another way to think about this is, if you pretend the numbers in the array are the elevations of points on a straight line, the fact that the array is sorted means that the points are on a line that slope upward from left to right. When we look at the midpoint, we are teleporting to the middle of the array, and then looking to see if we are lower or higher than the target height. If we're too high, we know we must go down, so we restrict attention to the left half of the line. Otherwise, we do the opposite.
+
+Now in this question, the points on the line are not just sloping upwards, they are sloping up until some point, and then sloping down. Think of this like a mountain. We want to find the maximum number, which is like the peak of the mountain. Now just like with binary search, let us look at the midpoint of the array, which is like dropping down to the middle of the mountain. Just looking at that one number doesn't tell us whether we are to the left of the peak, or to the right. But if we look at the two numbers around it, we can tell which way the ground is sloping. This will tell us if the peak is to the left, or to the right!
+
+Concretely, assume the array was:
+```
+{-3, -1, 4, 6, 10, 12, 3, 2}
+```
+
+We look at the middle number and its neighbours: `-1, 4, 6`. Since `-1 < 4 < 6`, the ground is sloping up to the right, and so the peak must be to the right of `4`. So we can cut down the array in half by calling the same procedure recursively on the part of the array to the right of `4`:
+```
+{6, 10, 12, 3, 2}
+```
+This time, the middle number and its neighbours are `10, 12, 3`, and the since both `10` and `3` are less than `12`, we know that `12` is the peak. So we can return `12` as the answer.
+
+Full code:
+
+```java
+	public static int max(int a, int b) {
+		if (a < b) return b; 
+		else return a;
+	}
+	
+	public static int findPeak(int[] a, int lo, int hi) {
+		System.out.printf("findPeak(%d, %d)\n", lo, hi);
+		if (lo >= hi) return a[lo];
+		if (lo + 1 == hi) return max(a[lo], a[hi]);
+		
+		int mid = (lo + hi)/2;
+		if (a[mid - 1] < a[mid] && a[mid] < a[mid + 1])
+			// Ground slopes up to the right, so move search to after mid
+			return findPeak(a, mid + 1, hi);
+		else if (a[mid - 1] > a[mid] && a[mid] > a[mid + 1])
+			// Ground slopes up to the left, so move search to before mid
+			return findPeak(a, lo, mid - 1);
+		else
+			// This must be the peak
+			return a[mid];
+	}
+	public static void main(String[] args) {
+		int a[] = {-3, -1, 4, 6, 10, 12, 3, 2};
+		System.out.print(findPeak(a, 0, a.length - 1));
+
+	}
+```
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+
+
+</html>

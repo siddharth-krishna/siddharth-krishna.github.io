@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <title>Fundamental Algorithms, Recitation: Dec 1, 2017</title>
+
+<xmp theme="journal" style="display:none;">
+<h4 style="text-align:right;">[Back to Recitation Home](index.html)</h4>
+
+## Avoiding Trolls
+
+You are given a graph $G = (V, E)$ with edge weights $w: E \rightarrow \mathbb{R}$, and a function $A: E \rightarrow \{0,1\}$ that marks certain edges (those with $A(u,v) = 1$) as having trolls on them. You need to find $c(s, t)$, for every pair of vertices $s$ and $t$, which is the minimum length of any path that goes through at most one edge with a troll on it.
+
+### Solution
+
+Construct a new graph $G' = (V \cup V', E')$ where $V'$ is a copy of $V$ that has a node $u'$ for every node $u \in V$, and $E'$ is constructed as follows:
+
+- For every edge $(u, v)$ with a troll on it ($A(u, v) = 1$), add an edge $(u, v')$ of weight $w(u, v)$.
+- For every edge $(u, v)$ without a troll ($A(u, v) = 0$), add two edges $(u, v)$ and $(u', v')$, both of weight $w(u, v)$.
+
+Notice that in $G'$ any path from $s$ to $t$ goes through no troll-edges and has the same length as a corresponding path in $G$.
+Similarly, any path from $s$ to $t'$ goes through exactly one troll-edge and has the same length as a corresponding path in $G$.
+Thus we can compute $c(x, t) = \min(\delta(s, t), \delta(s, t'))$.
+</xmp>
+
+<script src="../../strapdown/strapdown.min.js"></script>
+
+</html>
