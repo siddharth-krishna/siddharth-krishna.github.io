@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <style type="text/css">
+    input[type=text] {
+      width: 4em;
+      text-align: right;
+      padding: 2px;
+    }
+
+    input.op {
+      border: 1px solid #bbb;
+    }
+
+    body {
+      font-size: 14px;
+      font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #039;
+    }
+
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 10px;
+    }
+
+    footer a {
+      color: #666;
+    }
+
+    #results {
+      text-align: center;
+      font-size: 400px;
+      margin: 20px 0px;
+    }
+
+    #maintable {
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    #maintable td {
+      padding: 4px;
+      padding-left: 15px;
+      padding-right: 15px;
+      min-width: 330px;
+    }
+
+    #maintable td b {
+      color: #039;
+    }
+
+    #maintable th {
+      font-size: 16px;
+      font-weight: normal;
+      padding: 10px 8px;
+      background: #f2f2ff;
+      text-align: left;
+    }
+
+    #maintable tr {
+      border-bottom: 1px solid #ccc;
+    }
+
+    #maintable {
+      border: 0px;
+    }
+  </style>
+
+  <script language="JavaScript">
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+
+    function decodeSelection(books, starts, ends, selection) {
+      // If ends = [6, 11, 27], then 0-5 => book A, 6-10 => book B, 11-26 => book C
+      var i = ends.findIndex((end) => end > selection);
+      // selection = 12 is (12 - 11) = 1th ticket (0-indexing) in book C
+      var ticketNum = selection - (i > 0 ? ends[i - 1] : 0);
+      var x = Number.parseInt(starts[i]) + ticketNum;
+      return `${books[i]} ${x.toString().padStart(3, "0")}`;
+    }
+
+    function getInputs() {
+      var books = [document.inputs.B1.value, document.inputs.B2.value, document.inputs.B3.value, document.inputs.B4.value, document.inputs.B5.value, document.inputs.B6.value];
+      var starts = [document.inputs.S1.value, document.inputs.S2.value, document.inputs.S3.value, document.inputs.S4.value, document.inputs.S5.value, document.inputs.S6.value];
+      // If books = [A, B, C] have sold [6, 5, 16] tickets each, then ends = [6, 11, 27]
+      var ends = [
+        (document.inputs.E1.value - document.inputs.S1.value + 1),
+        (document.inputs.E2.value - document.inputs.S2.value + 1),
+        (document.inputs.E3.value - document.inputs.S3.value + 1),
+        (document.inputs.E4.value - document.inputs.S4.value + 1),
+        (document.inputs.E5.value - document.inputs.S5.value + 1),
+        (document.inputs.E6.value - document.inputs.S6.value + 1),
+      ];
+      console.log(ends);
+      for (var i = 1; i < ends.length; i++) {
+        ends[i] += ends[i - 1];
+      }
+      console.log(ends);
+      var totalTickets = ends[ends.length - 1];
+      return [books, starts, ends, totalTickets];
+    }
+
+    async function draw() {
+      var [books, starts, ends, totalTickets] = getInputs();
+      var selection = decodeSelection(books, starts, ends, getRandomInt(0, totalTickets));
+      document.getElementById("results").style.display = "none";
+      document.getElementById("spinner").style.display = "block";
+      await new Promise(r => setTimeout(r, 1000));
+      document.getElementById("spinner").style.display = "none";
+      document.getElementById("results").style.display = "block";
+      document.getElementById('results').innerHTML = selection.toString();
+    }
+
+    function test() {
+      // Test the distribution:
+      var [books, starts, ends, totalTickets] = getInputs();
+      var dist = new Map();
+      for (var i = 0; i < 10000; i++) {
+        var selection = decodeSelection(books, starts, ends, getRandomInt(0, totalTickets));
+        if (dist.has(selection)) {
+          dist.set(selection, dist.get(selection) + 1);
+        } else {
+          dist.set(selection, 1);
+        }
+      }
+      var dist = Array.from(dist.entries()).sort().map(([t, n]) => t + ": " + n.toString());
+      document.getElementById('results').innerHTML = "<p style='font-size: 12px'>" + dist.join("<br>") + "</p>";
+    }
+  </script>
+</head>
+
+<body>
+  <h1> Raffle Draw! </h1>
+
+  <br>
+
+  <form name=inputs>
+    <center>
+      <table id="maintable">
+        <thead>
+          <tr>
+            <th> <b>Book </b></th>
+            <th> <b>Start Ticket </b></th>
+            <th> <b>End Ticket (inclusive) </b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> <input type=text name=B1 tabindex="1" value="N"> </td>
+            <td> <input type=text name=S1 tabindex="1" value="473"> </td>
+            <td> <input type=text name=E1 tabindex="1" value="546"> </td>
+          </tr>
+          <tr>
+            <td> <input type=text name=B2 tabindex="2" value="O"> </td>
+            <td> <input type=text name=S2 tabindex="2" value="1"> </td>
+            <td> <input type=text name=E2 tabindex="2" value="10"> </td>
+          </tr>
+          <tr>
+            <td> <input type=text name=B3 tabindex="3" value="K"> </td>
+            <td> <input type=text name=S3 tabindex="3" value="1"> </td>
+            <td> <input type=text name=E3 tabindex="3" value="95"> </td>
+          </tr>
+          <tr>
+            <td> <input type=text name=B4 tabindex="4" value="D"> </td>
+            <td> <input type=text name=S4 tabindex="4" value="50"> </td>
+            <td> <input type=text name=E4 tabindex="4" value="65"> </td>
+          </tr>
+          <tr>
+            <td> <input type=text name=B5 tabindex="5" value="E"> </td>
+            <td> <input type=text name=S5 tabindex="5" value="3"> </td>
+            <td> <input type=text name=E5 tabindex="5" value="5"> </td>
+          </tr>
+          <tr>
+            <td> <input type=text name=B6 tabindex="6" value="F"> </td>
+            <td> <input type=text name=S6 tabindex="6" value="5"> </td>
+            <td> <input type=text name=E6 tabindex="6" value="9"> </td>
+          </tr>
+          <tr>
+            <td>
+              <input type=button value="Draw!" onclick="draw()" tabindex="11">
+              <input type=button value="Test Distribution" onclick="test()" tabindex="12" style="float: right;">
+              <!-- <input type=reset name=reset value=" Reset" tabindex="11" style="float: right;"> -->
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </center>
+  </form>
+
+
+  <center>
+    <div id="results" style="text-align: center;" width="1200px" height="600px"></div>
+    <iframe src="https://giphy.com/embed/1dxcPusbzbehNdF5qv" id="spinner" width="1200px" height="600px" frameBorder="0"
+      class="giphy-embed" allowFullScreen style="display: none;"></iframe>
+    <!-- <p><a href="https://giphy.com/gifs/TapTheTable-spin-the-wheel-fortune-tap-table-1dxcPusbzbehNdF5qv">via GIPHY</a></p> -->
+  </center>
+
+  <!-- <footer>
+    Copyright 2020, Siddharth Krishna</a>.
+  </footer> -->
+
+</body>
